@@ -1,0 +1,76 @@
+#!/bin/sh
+
+prog_name=$(basename $0)
+
+sub_help(){
+    echo "Usage: $prog_name <subcommand> [options]\n"
+    echo "Subcommands:"
+    echo "    install   Do bar"
+    echo ""
+    echo "For help with each subcommand run:"
+    echo "$prog_name <subcommand> -h|--help"
+    echo ""
+}
+
+_install_bundler() {
+  source vruby/bin/activate
+  gem install bundler
+}
+
+sub_install(){
+  to=/opt/vruby/share
+  version=2.2.0
+  tmp_file=/tmp/traveling-ruby-$version.tar.gz
+
+  if [ ! -f $tmp_file ]; then
+    # TODO: Use dicitonary of URLs & paltforms instead of hardcoding
+    curl -o $tmp_file http://d6r77u77i8pq3.cloudfront.net/releases/traveling-ruby-20150210-2.2.0-linux-x86_64.tar.gz
+  fi
+  cd /tmp
+  mkdir -p $to
+  mkdir ruby-$version
+  tar -C ruby-$version -xvf traveling-ruby-$version.tar.gz
+
+  sed -i "s/^echo GEM_HOME=.*$//" ruby-$version/bin/ruby_environment
+  cp -r ruby-$version $to/$version
+}
+
+sub_embed() {
+  version=2.2.0
+  from=/opt/vruby/share
+  target_base=$1
+  target_dir=$target_base/$version
+
+  activate=$(cat <<-EOF
+RUBY_VERSION=$version
+RUBY_ENGINE=ruby
+
+export RUBY_ROOT=$target_dir
+export GEM_HOME="./.gem/\$RUBY_ENGINE/\$RUBY_VERSION"
+export GEM_PATH=\$GEM_HOME
+
+export PATH=\$GEM_HOME/bin:$from/$version/lib/ruby/gems/$version:\$RUBY_ROOT/bin:\$PATH
+EOF
+)
+
+  mkdir -p $target_dir
+  mkdir -p $target_base/bin
+  echo "$activate" > $target_base/bin/activate
+  stow -d $from -t $target_dir $version
+
+  _install_bundler
+}
+
+subcommand=$1
+case $subcommand in
+    "" | "-h" | "--help")
+        sub_help
+        ;;
+    install)
+      shift
+      sub_install $@
+      ;;
+    *)
+      sub_embed $@
+      ;;
+esac
