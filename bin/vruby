@@ -67,7 +67,7 @@ sub_install(){
   mkdir -p $tmp_output
   tar -C $tmp_output -xvf $tmp_file > /dev/null
 
-  sed -i "s/^echo GEM_HOME=.*$//" ruby-$version/bin/ruby_environment
+  sed -i "s/^echo GEM_HOME=.*$//" $tmp_output/bin/ruby_environment
 
   cd $previous_dir
 
