@@ -6,6 +6,12 @@
 #
 #
 
-../bin/vruby install --to=../rubies
+install_to=../share
 
-echo "Latest ruby installed to ../rubies. Next run \"../bin/vruby vruby\" and then \"source vruby/bin/activate\""
+../bin/vruby install --to $install_to
+
+echo "Latest ruby installed to $install_to"
+echo "Next run:"
+echo
+echo "    ../bin/vruby vruby --from $install_to"
+echo "    source vruby/bin/activate"

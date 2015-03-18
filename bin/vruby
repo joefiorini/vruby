@@ -82,6 +82,24 @@ sub_embed() {
   target_base=$1
   target_dir=$target_base/$version
 
+
+  while [[ $# > 1 ]]
+  do
+    arg="$1"
+
+    case $arg in
+      --from)
+        from="$2"
+        shift
+        shift
+        ;;
+      *)
+        target_base=$1
+        shift
+        ;;
+    esac
+  done
+
   activate=$(cat <<-EOF
 RUBY_VERSION=$version
 RUBY_ENGINE=ruby
