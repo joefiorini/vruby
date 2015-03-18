@@ -18,21 +18,62 @@ _install_bundler() {
 }
 
 sub_install(){
+
   to=/opt/vruby/share
   version=2.2.0
-  tmp_file=/tmp/traveling-ruby-$version.tar.gz
+  platform=$(uname)
+  tr_version=20150210
+  url_root=http://d6r77u77i8pq3.cloudfront.net/releases
+
+  arg="$1"
+
+  case $arg in
+    --to)
+      to="$2"
+      shift
+      ;;
+    *)
+      cat <<< "WARNING: Unknown option \"$key\"\n\n" 1>&2
+  esac
+
+  case $platform in
+    (Linux|GNU*)
+      ruby_url=$url_root/traveling-ruby-$tr_version-$version-linux-x86_64.tar.gz
+      ;;
+    (Darwin)
+      ruby_url=$url_root/traveling-ruby-$tr_version-$version-osx.tar.gz
+      ;;
+    (*)
+      cat <<< "$platform is an unsupported platform. Please open an issue at https://github.com/joefiorini/vruby with the subject line \"Support for $platform\"." 1>&2
+      return 1
+      ;;
+  esac
+
+  tmp_file=/tmp/$(basename $ruby_url)
+  tmp_output=$(dirname $tmp_file)/ruby-$version
+
+  # Save previous directory so we can change back, in the event
+  # that $to is passed as a relative path
+  previous_dir=$(pwd)
+
+  cd $(dirname $tmp_file)
 
   if [ ! -f $tmp_file ]; then
-    # TODO: Use dicitonary of URLs & paltforms instead of hardcoding
-    curl -o $tmp_file http://d6r77u77i8pq3.cloudfront.net/releases/traveling-ruby-20150210-2.2.0-linux-x86_64.tar.gz
+    # TODO: Use dictionary of URLs & platforms instead of hardcoding
+    cat <<< "Downloading from $ruby_url"
+    curl -O $ruby_url
   fi
-  cd /tmp
-  mkdir -p $to
-  mkdir ruby-$version
-  tar -C ruby-$version -xvf traveling-ruby-$version.tar.gz
+
+  mkdir -p $tmp_output
+  tar -C $tmp_output -xvf $tmp_file > /dev/null
 
   sed -i "s/^echo GEM_HOME=.*$//" ruby-$version/bin/ruby_environment
-  cp -r ruby-$version $to/$version
+
+  cd $previous_dir
+
+  cat <<< "Installing to $to"
+  mkdir -p $to
+  cp -r $tmp_output $to/$version
 }
 
 sub_embed() {
