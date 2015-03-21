@@ -14,7 +14,7 @@ sub_help(){
 
 _install_bundler() {
   source vruby/bin/activate
-  gem install bundler
+  gem install --no-user-install bundler
 }
 
 sub_install(){
@@ -82,6 +82,7 @@ sub_embed() {
   from=/opt/vruby/share
   target_base=$1
   target_dir=$target_base/$version
+  host_dir=$(pwd)
 
 
   while [[ $# > 1 ]]
@@ -106,7 +107,7 @@ RUBY_VERSION=$version
 RUBY_ENGINE=ruby
 
 export RUBY_ROOT=$target_dir
-export GEM_HOME="./.gem/\$RUBY_ENGINE/\$RUBY_VERSION"
+export GEM_HOME="$host_dir/.gem/\$RUBY_ENGINE/\$RUBY_VERSION"
 export GEM_PATH=\$GEM_HOME
 
 export PATH=\$GEM_HOME/bin:$from/$version/lib/ruby/gems/$version:\$RUBY_ROOT/bin:\$PATH
