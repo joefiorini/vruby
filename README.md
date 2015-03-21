@@ -54,8 +54,11 @@ To deactivate, close your terminal session and open a new one.
 
 ## TODO
 
-- [ ] Create map of platforms to Traveling Ruby download URLs
+- [ ] Create map of platforms to binary Ruby download URLs
+- [ ] Make it work on OS X
+- [ ] Make sure it works with a rails app
 - [ ] Make it possible to install globally in `/usr/local`
 - [ ] Look into changing to Go or some other cross-platform compiled language (may make Windows support easier)
 - [ ] Vendor GNU stow for easier installation
 - [ ] Packages for major platforms (using FPM to create binary distributions)
+- [ ] Automated testing in docker containers
