@@ -1,9 +1,9 @@
 begin
   require 'rack'
 rescue LoadError
-  Gem.install 'rack'
-  Gem.refresh
-  require 'rack'
+  system "gem install --no-user-install rack"
+  Gem.clear_paths
+  retry
 end
 
 app = Proc.new do |env|

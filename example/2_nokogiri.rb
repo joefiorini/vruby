@@ -1,10 +1,9 @@
 begin
   require 'nokogiri'
 rescue LoadError
-  puts "Nokogiri not found, installing..."
-  Gem.install 'nokogiri'
-  Gem.refresh
-  require 'nokogiri'
+  system "gem install --no-user-install rack"
+  Gem.clear_paths
+  retry
 end
 
 f = File.open('test.html')
