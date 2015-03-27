@@ -1,6 +1,34 @@
 #!/bin/sh
 
+set -e
+
 prog_name=$(basename $0)
+
+# Taken from https://gist.github.com/pkuczynski/8665367
+# Parses yaml file into variables, for example:
+#
+# foo:
+#  bar: baz
+#  qux: quux
+#
+# would become a shell variables:
+# $foo_bar = baz
+# $foo_qux = quux
+parse_yaml() {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+      }
+   }'
+}
 
 sub_help(){
     echo "Usage: $prog_name <subcommand> [options]\n"
@@ -20,9 +48,8 @@ _install_bundler() {
 sub_install(){
 
   to=/opt/vruby/share
-  version=2.2.0
+  version=2.2.1
   platform=$(uname)
-  tr_version=20150210
   url_root=http://d6r77u77i8pq3.cloudfront.net/releases
 
   arg="$1"
@@ -32,16 +59,22 @@ sub_install(){
       to="$2"
       shift
       ;;
+    "")
+      ;;
     *)
       cat <<< "WARNING: Unknown option \"$key\"\n\n" 1>&2
   esac
 
+  share_dir="$(dirname "${BASH_SOURCE[0]}")/../share"
+  parse_yaml $share_dir/vruby/downloads.yml "downloads_"
+  eval $(parse_yaml $share_dir/vruby/downloads.yml "downloads_")
+
   case $platform in
     (Linux|GNU*)
-      ruby_url=$url_root/traveling-ruby-$tr_version-$version-linux-x86_64.tar.gz
+      ruby_url=$downloads__linux
       ;;
     (Darwin)
-      ruby_url=$url_root/traveling-ruby-$tr_version-$version-osx.tar.gz
+      ruby_url=$downloads__mac
       ;;
     (*)
       cat <<< "$platform is an unsupported platform. Please open an issue at https://github.com/joefiorini/vruby with the subject line \"Support for $platform\"." 1>&2
@@ -50,7 +83,7 @@ sub_install(){
   esac
 
   tmp_file=/tmp/$(basename $ruby_url)
-  tmp_output=$(dirname $tmp_file)/ruby-$version
+  tmp_output=/tmp/$(basename $tmp_file .tar.bz2)
 
   # Save previous directory so we can change back, in the event
   # that $to is passed as a relative path
@@ -64,21 +97,21 @@ sub_install(){
     curl -O $ruby_url
   fi
 
-  mkdir -p $tmp_output
-  tar -C $tmp_output -xvf $tmp_file > /dev/null
+  tar -xvf $tmp_file > /dev/null
 
-  sed -i.bak -e "s/^echo GEM_HOME=.*$//" $tmp_output/bin/ruby_environment
-  rm $tmp_output/bin/ruby_environment.bak
+  # sed -i.bak -e "s/^echo GEM_HOME=.*$//" $tmp_output/bin/ruby_environment
+  # rm $tmp_output/bin/ruby_environment.bak
 
   cd $previous_dir
 
   cat <<< "Installing to $to"
   mkdir -p $to
-  cp -r $tmp_output $to/$version
+  echo "Copying $tmp_output/ to $to/$version"
+  cp -r $tmp_output/ $to/$version
 }
 
 sub_embed() {
-  version=2.2.0
+  version=2.2.1
   from=/opt/vruby/share
   target_base=$1
   target_dir=$target_base/$version
