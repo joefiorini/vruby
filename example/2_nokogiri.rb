@@ -1,7 +1,7 @@
 begin
   require 'nokogiri'
 rescue LoadError
-  system "gem install --no-user-install rack"
+  system "gem install --no-user-install nokogiri"
   Gem.clear_paths
   retry
 end
