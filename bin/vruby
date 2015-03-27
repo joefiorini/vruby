@@ -74,7 +74,7 @@ sub_install(){
       ruby_url=$downloads__linux
       ;;
     (Darwin)
-      ruby_url=$downloads__mac
+      ruby_url=$downloads__osx
       ;;
     (*)
       cat <<< "$platform is an unsupported platform. Please open an issue at https://github.com/joefiorini/vruby with the subject line \"Support for $platform\"." 1>&2
