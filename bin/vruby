@@ -160,7 +160,7 @@ sub_embed() {
 RUBY_VERSION=$version
 RUBY_ENGINE=ruby
 
-export RUBY_ROOT=$target_dir
+export RUBY_ROOT=$host_dir/$target_dir
 export GEM_HOME="$host_dir/.gem/\$RUBY_ENGINE/\$RUBY_VERSION"
 export GEM_PATH=\$GEM_HOME
 
