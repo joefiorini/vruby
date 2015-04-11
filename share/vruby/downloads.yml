@@ -1,4 +1,4 @@
 2.2.1:
   linux: http://rvm.io/binaries/ubuntu/14.10/x86_64/ruby-2.2.1.tar.bz2
-  osx: http://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.5.tar.bz2
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.2.1.tar.bz2
 
