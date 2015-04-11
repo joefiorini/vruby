@@ -41,7 +41,8 @@ sub_help(){
 }
 
 _install_bundler() {
-  source vruby/bin/activate
+  base=$1
+  source "${base}/bin/activate"
   gem install --no-user-install bundler
 }
 
@@ -173,7 +174,7 @@ EOF
   echo "$activate" > $target_base/bin/activate
   stow -d $from -t $target_dir $version
 
-  _install_bundler
+  _install_bundler $target_base
 }
 
 subcommand=$1
