@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -59,25 +59,41 @@ sub_install(){
       to="$2"
       shift
       ;;
+    --version)
+      # TODO: Make sure this works if both --to and --version are passed
+      version="$2"
+      shift
+      ;;
     "")
+      # Suppress below warning when no args passed
       ;;
     *)
       cat <<< "WARNING: Unknown option \"$key\"\n\n" 1>&2
   esac
 
   share_dir="$(dirname "${BASH_SOURCE[0]}")/../share"
-  parse_yaml $share_dir/vruby/downloads.yml "downloads_"
   eval $(parse_yaml $share_dir/vruby/downloads.yml "downloads_")
+
+  version_key=$(echo $version | sed 's/\./_/g')
 
   case $platform in
     (Linux|GNU*)
-      ruby_url=$downloads__linux
+      url_key="downloads_${version_key}_linux"
       ;;
     (Darwin)
-      ruby_url=$downloads__osx
+      url_key="downloads_${version_key}_osx"
       ;;
     (*)
       cat <<< "$platform is an unsupported platform. Please open an issue at https://github.com/joefiorini/vruby with the subject line \"Support for $platform\"." 1>&2
+      return 1
+      ;;
+  esac
+
+  ruby_url=${!url_key}
+
+  case $ruby_url in
+    ("")
+      cat <<< "$version is not a supported Ruby version. Please open an issue at https://github.com/joefiorini/vruby with the subject line \"Support for Ruby $version\"." 1>&2
       return 1
       ;;
   esac
@@ -114,7 +130,6 @@ sub_embed() {
   version=2.2.1
   from=/opt/vruby/share
   target_base=$1
-  target_dir=$target_base/$version
   host_dir=$(pwd)
 
 
@@ -128,12 +143,18 @@ sub_embed() {
         shift
         shift
         ;;
+      --version)
+        version="$2"
+        shift
+        ;;
       *)
         target_base=$1
         shift
         ;;
     esac
   done
+
+  target_dir=$target_base/$version
 
   activate=$(cat <<-EOF
 RUBY_VERSION=$version
