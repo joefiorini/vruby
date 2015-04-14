@@ -168,10 +168,9 @@ export PATH=\$GEM_HOME/bin:$from/$version/lib/ruby/gems/$version/bin:\$RUBY_ROOT
 EOF
 )
 
-  mkdir -p $target_dir
   mkdir -p $target_base/bin
   echo "$activate" > $target_base/bin/activate
-  stow -d $from -t $target_dir $version
+  ln -s $from/$version $target_dir
 
   _install_bundler
 }
