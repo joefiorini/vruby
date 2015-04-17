@@ -17,29 +17,29 @@ prog_name=$(basename $0)
 # $foo_bar = baz
 # $foo_qux = quux
 parse_yaml() {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
-      }
-   }'
+  local prefix=$2
+  local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+  sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
+      -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+  awk -F$fs '{
+    indent = length($1)/2;
+    vname[indent] = $2;
+    for (i in vname) {if (i > indent) {delete vname[i]}}
+    if (length($3) > 0) {
+       vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+       printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+    }
+  }'
 }
 
 sub_help(){
-    echo "Usage: $prog_name <subcommand> [options]\n"
-    echo "Subcommands:"
-    echo "    install   Do bar"
-    echo ""
-    echo "For help with each subcommand run:"
-    echo "$prog_name <subcommand> -h|--help"
-    echo ""
+  echo "Usage: $prog_name <subcommand> [options]\n"
+  echo "Subcommands:"
+  echo "    install   Do bar"
+  echo ""
+  echo "For help with each subcommand run:"
+  echo "$prog_name <subcommand> -h|--help"
+  echo ""
 }
 
 _install_bundler() {
@@ -183,17 +183,17 @@ EOF
 
 subcommand=$1
 case $subcommand in
-    "" | "-h" | "--help")
-        sub_help
-        ;;
-    "-v" | "--version")
-      echo "vruby v${vruby_version}"
-      ;;
-    install)
-      shift
-      sub_install $@
-      ;;
-    *)
-      sub_embed $@
-      ;;
+  "" | "-h" | "--help")
+    sub_help
+    ;;
+  "-v" | "--version")
+    echo "vruby v${vruby_version}"
+    ;;
+  install)
+    shift
+    sub_install $@
+    ;;
+  *)
+    sub_embed $@
+    ;;
 esac
