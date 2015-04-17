@@ -54,26 +54,25 @@ sub_install(){
   version=$default_ruby_version
   platform=$(uname)
 
-  arg="$1"
-
-  case $arg in
-    --to)
-      to="$2"
-      shift
-      ;;
-    --version)
-      # TODO: Make sure this works if both --to and --version are passed
-      version="$2"
-      shift
-      ;;
-    "")
-      # Suppress below warning when no args passed
-      ;;
-    *)
-      echo -e "WARNING: Unknown option \"$arg\"\n" 1>&2
-      exit 1
-      ;;
-  esac
+  while [ $# -ne 0 ]
+  do
+    arg=$1
+    shift
+    case $arg in
+      --to)
+        to="$2"
+        shift
+        ;;
+      --version)
+        version="$2"
+        shift
+        ;;
+      *)
+        echo -e "WARNING: Unknown option \"$arg\"\n" 1>&2
+        exit 1
+        ;;
+    esac
+  done
 
   share_dir="$(dirname "${BASH_SOURCE[0]}")/../share"
   eval $(parse_yaml $share_dir/vruby/downloads.yml "downloads_")
