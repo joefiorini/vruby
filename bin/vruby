@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
+set -e
 
 vruby_version="0.1"
-
-set -e
+default_ruby_version="2.2.1"
 
 prog_name=$(basename $0)
 
@@ -51,7 +51,7 @@ _install_bundler() {
 sub_install(){
 
   to=/opt/vruby/share
-  version=2.2.1
+  version=$default_ruby_version
   platform=$(uname)
   url_root=http://d6r77u77i8pq3.cloudfront.net/releases
 
@@ -132,7 +132,7 @@ sub_install(){
 }
 
 sub_embed() {
-  version=2.2.1
+  version=$default_ruby_version
   from=/opt/vruby/share
   target_base=$1
   host_dir=$(pwd)
