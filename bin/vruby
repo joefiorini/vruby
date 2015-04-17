@@ -53,7 +53,6 @@ sub_install(){
   to=/opt/vruby/share
   version=$default_ruby_version
   platform=$(uname)
-  url_root=http://d6r77u77i8pq3.cloudfront.net/releases
 
   arg="$1"
 
@@ -113,7 +112,6 @@ sub_install(){
   cd $(dirname $tmp_file)
 
   if [ ! -f $tmp_file ]; then
-    # TODO: Use dictionary of URLs & platforms instead of hardcoding
     cat <<< "Downloading from $ruby_url"
     curl -O $ruby_url
   fi
