@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+vruby_version="0.1"
+
 set -e
 
 prog_name=$(basename $0)
@@ -184,6 +186,9 @@ case $subcommand in
     "" | "-h" | "--help")
         sub_help
         ;;
+    "-v" | "--version")
+      echo "vruby v${vruby_version}"
+      ;;
     install)
       shift
       sub_install $@
