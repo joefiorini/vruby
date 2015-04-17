@@ -110,9 +110,20 @@ sub_install(){
 
   cd $(dirname $tmp_file)
 
-  if [ ! -f $tmp_file ]; then
+  # first if we have a file, make sure it is complete
+  if [ -f $tmp_file ]; then
+    set +e
+    tar -tf $tmp_file 2>1 > /dev/null
+    err=$?
+    set -e
+  else
+    err=0
+  fi
+
+  # if the file is missing or incomplete, start or resume download
+  if [ ! -f $tmp_file -o $err -ne 0 ]; then
     cat <<< "Downloading from $ruby_url"
-    curl -O $ruby_url
+    curl -C - -O $ruby_url
   fi
 
   tar -xvf $tmp_file > /dev/null
