@@ -69,7 +69,9 @@ sub_install(){
       # Suppress below warning when no args passed
       ;;
     *)
-      cat <<< "WARNING: Unknown option \"$key\"\n\n" 1>&2
+      echo -e "WARNING: Unknown option \"$arg\"\n" 1>&2
+      exit 1
+      ;;
   esac
 
   share_dir="$(dirname "${BASH_SOURCE[0]}")/../share"
