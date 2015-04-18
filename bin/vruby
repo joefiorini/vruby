@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-
 set -e
+
+vruby_version="0.1"
+default_ruby_version="2.2.1"
 
 prog_name=$(basename $0)
 
@@ -15,29 +17,29 @@ prog_name=$(basename $0)
 # $foo_bar = baz
 # $foo_qux = quux
 parse_yaml() {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
-      }
-   }'
+  local prefix=$2
+  local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+  sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
+      -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+  awk -F$fs '{
+    indent = length($1)/2;
+    vname[indent] = $2;
+    for (i in vname) {if (i > indent) {delete vname[i]}}
+    if (length($3) > 0) {
+       vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+       printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+    }
+  }'
 }
 
 sub_help(){
-    echo "Usage: $prog_name <subcommand> [options]\n"
-    echo "Subcommands:"
-    echo "    install   Do bar"
-    echo ""
-    echo "For help with each subcommand run:"
-    echo "$prog_name <subcommand> -h|--help"
-    echo ""
+  echo "Usage: $prog_name <subcommand> [options]\n"
+  echo "Subcommands:"
+  echo "    install   Do bar"
+  echo ""
+  echo "For help with each subcommand run:"
+  echo "$prog_name <subcommand> -h|--help"
+  echo ""
 }
 
 _install_bundler() {
@@ -49,28 +51,28 @@ _install_bundler() {
 sub_install(){
 
   to=/opt/vruby/share
-  version=2.2.1
+  version=$default_ruby_version
   platform=$(uname)
-  url_root=http://d6r77u77i8pq3.cloudfront.net/releases
 
-  arg="$1"
-
-  case $arg in
-    --to)
-      to="$2"
-      shift
-      ;;
-    --version)
-      # TODO: Make sure this works if both --to and --version are passed
-      version="$2"
-      shift
-      ;;
-    "")
-      # Suppress below warning when no args passed
-      ;;
-    *)
-      cat <<< "WARNING: Unknown option \"$key\"\n\n" 1>&2
-  esac
+  while [ $# -ne 0 ]
+  do
+    arg=$1
+    shift
+    case $arg in
+      --to)
+        to="$2"
+        shift
+        ;;
+      --version)
+        version="$2"
+        shift
+        ;;
+      *)
+        echo -e "WARNING: Unknown option \"$arg\"\n" 1>&2
+        exit 1
+        ;;
+    esac
+  done
 
   share_dir="$(dirname "${BASH_SOURCE[0]}")/../share"
   eval $(parse_yaml $share_dir/vruby/downloads.yml "downloads_")
@@ -108,10 +110,20 @@ sub_install(){
 
   cd $(dirname $tmp_file)
 
-  if [ ! -f $tmp_file ]; then
-    # TODO: Use dictionary of URLs & platforms instead of hardcoding
+  # first if we have a file, make sure it is complete
+  if [ -f $tmp_file ]; then
+    set +e
+    tar -tf $tmp_file 2>1 > /dev/null
+    err=$?
+    set -e
+  else
+    err=0
+  fi
+
+  # if the file is missing or incomplete, start or resume download
+  if [ ! -f $tmp_file -o $err -ne 0 ]; then
     cat <<< "Downloading from $ruby_url"
-    curl -O $ruby_url
+    curl -C - -O $ruby_url
   fi
 
   tar -xvf $tmp_file > /dev/null
@@ -128,7 +140,7 @@ sub_install(){
 }
 
 sub_embed() {
-  version=2.2.1
+  version=$default_ruby_version
   from=/opt/vruby/share
   target_base=$1
   host_dir=$(pwd)
@@ -179,14 +191,17 @@ EOF
 
 subcommand=$1
 case $subcommand in
-    "" | "-h" | "--help")
-        sub_help
-        ;;
-    install)
-      shift
-      sub_install $@
-      ;;
-    *)
-      sub_embed $@
-      ;;
+  "" | "-h" | "--help")
+    sub_help
+    ;;
+  "-v" | "--version")
+    echo "vruby v${vruby_version}"
+    ;;
+  install)
+    shift
+    sub_install $@
+    ;;
+  *)
+    sub_embed $@
+    ;;
 esac
