@@ -60,11 +60,11 @@ sub_install(){
     shift
     case $arg in
       --to)
-        to="$2"
+        to="$1"
         shift
         ;;
       --version)
-        version="$2"
+        version="$1"
         shift
         ;;
       *)
