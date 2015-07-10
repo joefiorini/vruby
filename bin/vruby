@@ -154,6 +154,12 @@ sub_embed() {
     esac
   done
 
+  # if we do not have an absolute path, make it absolute
+  # ln needs an absolute path
+  if [[ $from != /* ]]; then
+    from=$PWD/$from
+  fi
+
   target_dir=$target_base/$version
 
   activate=$(cat <<-EOF
