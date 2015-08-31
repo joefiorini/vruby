@@ -167,6 +167,12 @@ sub_embed() {
     esac
   done
 
+  # if we do not have an absolute path, make it absolute
+  # ln needs an absolute path
+  if [[ $from != /* ]]; then
+    from=$PWD/$from
+  fi
+
   target_dir=$target_base/$version
 
   activate=$(cat <<-EOF
@@ -181,10 +187,9 @@ export PATH=\$GEM_HOME/bin:$from/$version/lib/ruby/gems/$version/bin:\$RUBY_ROOT
 EOF
 )
 
-  mkdir -p $target_dir
   mkdir -p $target_base/bin
   echo "$activate" > $target_base/bin/activate
-  stow -d $from -t $target_dir $version
+  ln -s $from/$version $target_dir
 
   _install_bundler $target_base
 }
