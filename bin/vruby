@@ -44,8 +44,13 @@ sub_help(){
 
 _install_bundler() {
   base=$1
-  source "${base}/bin/activate"
-  gem install --no-user-install bundler
+
+  if [[ $SHELL =~ fish$ ]]; then
+    fish -c "source \"${base}/bin/activate\"; and gem install --no-user-install bundler"
+  else
+    source "${base}/bin/activate"
+    gem install --no-user-install bundler
+  fi
 }
 
 sub_install(){
@@ -175,6 +180,19 @@ sub_embed() {
 
   target_dir=$target_base/$version
 
+  if [[ $SHELL =~ fish$ ]]; then
+    activate=$(cat <<-EOF
+set RUBY_VERSION $version
+set RUBY_ENGINE ruby
+set RUBY_ROOT "$host_dir/$target_dir"
+
+set -x GEM_HOME "$host_dir/.gem/\$RUBY_ENGINE/\$RUBY_VERSION"
+set -x GEM_PATH "\$GEM_HOME"
+
+set -x PATH \$GEM_HOME/bin "$from/$version/lib/ruby/gems/$version/bin" "\$RUBY_ROOT/bin" \$PATH
+EOF
+)
+  else
   activate=$(cat <<-EOF
 RUBY_VERSION=$version
 RUBY_ENGINE=ruby
@@ -186,6 +204,7 @@ export GEM_PATH=\$GEM_HOME
 export PATH=\$GEM_HOME/bin:$from/$version/lib/ruby/gems/$version/bin:\$RUBY_ROOT/bin:\$PATH
 EOF
 )
+fi
 
   mkdir -p $target_base/bin
   echo "$activate" > $target_base/bin/activate
