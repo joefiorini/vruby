@@ -136,7 +136,7 @@ sub_install(){
   # sed -i.bak -e "s/^echo GEM_HOME=.*$//" $tmp_output/bin/ruby_environment
   # rm $tmp_output/bin/ruby_environment.bak
 
-  cd $previous_dir
+  cd "$previous_dir"
 
   cat <<< "Installing to $to"
   mkdir -p $to
