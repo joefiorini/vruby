@@ -17,7 +17,19 @@ This project is currently an _extreme_ alpha. The README at the moment is more o
 
 ## Installation
 
-The easiest way to install vruby is to use GNU stow (which is currently required for use anyway). Install it with your system's package manager (or homebrew on OSX). Once you have it, download the latest tarball of this repo from github and extract it to `/opt/vruby`. Then use stow to install it to `/usr/local` by running `stow -d /opt -t /usr/local vruby` (TODO: Make this actually isolatable).
+### Homebrew
+
+vruby does not yet have an acceptable homebrew formula. There is a very simple Homebrew formula in this repo you can use to install for the time being. To install the latest HEAD via Homebrew simply install:
+
+```
+brew install https://raw.githubusercontent.com/joefiorini/vruby/master/formula/vruby.rb
+```
+
+### GNU Stow
+
+You can also use [GNU stow](https://www.gnu.org/software/stow/manual/stow.html#Justification-For-Yet-Another-Set-Of-Ignore-Files) to install vruby. Clone this repo into `/usr/local/stow` and from there run `stow vruby`.
+
+## Install Ruby
 
 Once it's setup, you can install the latest ruby with:
 
