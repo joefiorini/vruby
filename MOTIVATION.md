@@ -1,4 +1,4 @@
-I originally posted this as a comment in #3, but I felt like it's important enough to put it into it's own document.
+I originally posted this as a comment in [#3](https://github.com/joefiorini/vruby/issues/3), but I felt like it's important enough to put it into it's own document.
 
 ### The Use Case
 
