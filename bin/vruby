@@ -45,12 +45,8 @@ sub_help(){
 _install_bundler() {
   base=$1
 
-  if [[ $SHELL =~ fish$ ]]; then
-    fish -c "source \"${base}/bin/activate\"; and gem install --no-user-install bundler"
-  else
-    source "${base}/bin/activate"
-    gem install --no-user-install bundler
-  fi
+  source "${base}/bin/activate"
+  gem install --no-user-install bundler
 }
 
 sub_install(){
@@ -150,6 +146,8 @@ sub_embed() {
   target_base=$1
   host_dir=$(pwd)
 
+  share_dir="$(dirname "${BASH_SOURCE[0]}")/../share/vruby"
+
 
   while [[ $# > 1 ]]
   do
@@ -180,34 +178,32 @@ sub_embed() {
 
   target_dir=$target_base/$version
 
-  if [[ $SHELL =~ fish$ ]]; then
-    activate=$(cat <<-EOF
-set RUBY_VERSION $version
-set RUBY_ENGINE ruby
-set RUBY_ROOT "$host_dir/$target_dir"
-
-set -x GEM_HOME "$host_dir/.gem/\$RUBY_ENGINE/\$RUBY_VERSION"
-set -x GEM_PATH "\$GEM_HOME"
-
-set -x PATH \$GEM_HOME/bin "$from/$version/lib/ruby/gems/$version/bin" "\$RUBY_ROOT/bin" \$PATH
-EOF
-)
-  else
-  activate=$(cat <<-EOF
-RUBY_VERSION=$version
-RUBY_ENGINE=ruby
-RUBY_ROOT=$host_dir/$target_dir
-
-export GEM_HOME="$host_dir/.gem/\$RUBY_ENGINE/\$RUBY_VERSION"
-export GEM_PATH=\$GEM_HOME
-
-export PATH=\$GEM_HOME/bin:$from/$version/lib/ruby/gems/$version/bin:\$RUBY_ROOT/bin:\$PATH
-EOF
-)
-fi
-
   mkdir -p $target_base/bin
-  echo "$activate" > $target_base/bin/activate
+
+  for activate_script in $share_dir/embed/*; do
+
+    activate_script_name=$(basename $activate_script)
+
+    if [ $activate_script_name == "activate.sh" ]; then
+      activate_file="$target_base/bin/activate"
+    else
+      activate_file="$target_base/bin/$activate_script_name"
+    fi
+
+    contents="$(cat $activate_script)"
+    # Would really like to use `sed` here, but it's interface is VERY
+    # inconsistent between Linux/Mac; using bash string replacement
+    # instead
+    #
+    contents=${contents//__VERSION__/$version}
+    contents=${contents//__HOST_DIR__/$host_dir}
+    contents=${contents//__TARGET_DIR__/$target_dir}
+    contents=${contents//__FROM__/$from}
+
+    echo "writing $contents to $activate_file"
+    echo "$contents" > "$activate_file"
+  done
+
   ln -s $from/$version $target_dir
 
   _install_bundler $target_base

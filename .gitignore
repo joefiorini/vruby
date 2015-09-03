@@ -1,4 +1,4 @@
-vruby/
+/vruby/
 .gem
 /tmp
 example/vruby_test
