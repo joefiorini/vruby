@@ -11,6 +11,8 @@ Because even after using rvm, rbenv and chruby, I'm still not happy with how the
 - You've found yourself pining for something like `virtualenv` but for ruby
 - Are sick of waiting for rubies to compile when someone has already done it on every platform anyway
 
+For more detail read [MOTIVATION.md](https://github.com/joefiorini/vruby/blob/master/MOTIVATION.md)
+
 ## Alpha Note
 
 This project is currently an _extreme_ alpha. The README at the moment is more of a wishlist than a working step-by-step guide. This does work on my minimal ArchLinux setup, and I've followed a very similar workflow quite a bit on OS X (so I know it works). However, I am no longer a full time Ruby developer, therefore I don't have the bandwidth to build the fully robust solution I'd like. If others are interested in collaborating on this, please get in touch with me and we can chat.
