@@ -200,7 +200,6 @@ sub_embed() {
     contents=${contents//__TARGET_DIR__/$target_dir}
     contents=${contents//__FROM__/$from}
 
-    echo "writing $contents to $activate_file"
     echo "$contents" > "$activate_file"
   done
 
