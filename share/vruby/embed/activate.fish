@@ -5,4 +5,6 @@ set RUBY_ROOT "__HOST_DIR__/__TARGET_DIR__"
 set -x GEM_HOME "__HOST_DIR__/.gem/$RUBY_ENGINE/$RUBY_VERSION"
 set -x GEM_PATH "$GEM_HOME"
 
-set -x PATH $GEM_HOME/bin "__FROM__/__VERSION__/lib/ruby/gems/__VERSION__/bin" "$RUBY_ROOT/bin" $PATH
+set ruby_api_version (ruby -e "puts RbConfig::CONFIG['ruby_version']")
+
+set -x PATH $GEM_HOME/bin "__FROM__/__VERSION__/lib/ruby/gems/$ruby_api_version" "$RUBY_ROOT/bin" $PATH
