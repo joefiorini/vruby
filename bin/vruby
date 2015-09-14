@@ -49,10 +49,27 @@ _install_bundler() {
   gem install --no-user-install bundler
 }
 
+_load_default_ruby_version() {
+  current_dir=$(pwd)
+  test -f $current_dir/.ruby-version
+  use_ruby_version_file=$?
+
+  if [ $use_ruby_version_file -eq 0 ]; then
+    # This will be overridden if --version arg is passed
+    version=$(cat $current_dir/.ruby-version)
+  else
+    version=$default_ruby_version
+  fi
+
+  echo $version
+}
+
 sub_install(){
 
   to=/opt/vruby/share
-  version=$default_ruby_version
+
+  version=$(_load_default_ruby_version)
+
   platform=$(uname)
 
   while [ $# -ne 0 ]
@@ -74,6 +91,7 @@ sub_install(){
         ;;
     esac
   done
+
 
   share_dir="$(dirname "${BASH_SOURCE[0]}")/../share"
   eval $(parse_yaml $share_dir/vruby/downloads.yml "downloads_")
@@ -141,10 +159,11 @@ sub_install(){
 }
 
 sub_embed() {
-  version=$default_ruby_version
   from=/opt/vruby/share
   target_base=$1
   host_dir=$(pwd)
+
+  version=$(_load_default_ruby_version)
 
   share_dir="$(dirname "${BASH_SOURCE[0]}")/../share/vruby"
 
