@@ -6,7 +6,7 @@ class Vruby < Formula
   desc "It's like virtualenv, but for ruby."
   homepage "https://github.com/joefiorini/vruby"
   url "https://github.com/joefiorini/vruby/archive/master.zip"
-  sha256 "95c727c7f2a38b5a28e6cb16e22a8c491f4543b544dcd1900e457b357f224ceb"
+  sha256 "414e7881971fcbc40f785e290cb3f1fbeace2df0a5378e4d33235c69b5b8cc59"
   version "1.0-pre"
 
   def install
