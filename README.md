@@ -39,7 +39,7 @@ Once it's setup, you can install the latest ruby with:
 vruby install
 ```
 
-or a specific version with:
+This command will look to a `.ruby-version` file if one exists in the current working directory, or default to `$default_ruby_version`. You can override this behavior by specifying a version with:
 
 ```
 vruby install $VERSION
