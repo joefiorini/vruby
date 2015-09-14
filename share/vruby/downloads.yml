@@ -3,5 +3,19 @@
 2_2_1:
   linux: http://rvm.io/binaries/ubuntu/14.10/x86_64/ruby-2.2.1.tar.bz2
   osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.2.1.tar.bz2
+2_1_7:
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.7.tar.bz2
+2_1_6:
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.6.tar.bz2
 2_1_5:
-  osx: http://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.5.tar.bz2
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.5.tar.bz2
+2_1_4:
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.4.tar.bz2
+2_1_3:
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.3.tar.bz2
+2_1_2:
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.2.tar.bz2
+2_1_1:
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.1.tar.bz2
+2_1_0:
+  osx: https://rvm.io/binaries/osx/10.10/x86_64/ruby-2.1.0.tar.bz2
