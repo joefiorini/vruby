@@ -13,9 +13,13 @@ Because even after using rvm, rbenv and chruby, I'm still not happy with how the
 
 For more detail read [MOTIVATION.md](https://github.com/joefiorini/vruby/blob/master/MOTIVATION.md)
 
-## Alpha Note
+## Call for Community
 
-This project is currently an _extreme_ alpha. The README at the moment is more of a wishlist than a working step-by-step guide. This does work on my minimal ArchLinux setup, and I've followed a very similar workflow quite a bit on OS X (so I know it works). However, I am no longer a full time Ruby developer, therefore I don't have the bandwidth to build the fully robust solution I'd like. If others are interested in collaborating on this, please get in touch with me and we can chat.
+This project is currently alpha. I've been using vruby for managing Ruby on a couple Macs for more than 6 months and it is working great for me. Alas, I cannot call it anything but alpha until it's proven successful in the wild. If you decide to try vruby, please submit feedback by opening issue and telling me about your experience. Regardless of how it went, feedback is the only way to be confident in recommending it to the community.
+
+## Call for Contributors
+
+I don't currently have the bandwidth to build the fully robust solution I'd like. If you are interested in collaborating on this, please get in touch with me and we can chat.
 
 ## Installation
 
