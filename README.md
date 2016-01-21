@@ -29,10 +29,6 @@ vruby does not yet have an acceptable homebrew formula. There is a very simple H
 brew install https://raw.githubusercontent.com/joefiorini/vruby/master/formula/vruby.rb
 ```
 
-### GNU Stow
-
-You can also use [GNU stow](https://www.gnu.org/software/stow/manual/stow.html#Justification-For-Yet-Another-Set-Of-Ignore-Files) to install vruby. Clone this repo into `/usr/local/stow` and from there run `stow vruby`.
-
 ## Install Ruby
 
 Once it's setup, you can install the latest ruby with:
