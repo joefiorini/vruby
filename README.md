@@ -31,7 +31,11 @@ brew install https://raw.githubusercontent.com/joefiorini/vruby/master/formula/v
 
 ## Install Ruby
 
-Once it's setup, you can install the latest ruby with:
+### Using binary Ruby distributions
+
+vruby has built-in support for installing binary Ruby distributions. These have the significant advantage that installation is simply decompressing the archive to a directory. However, these distributions require manual effort to maintain and are not always up-to-date. Check <http://rvm.io/binaries> to see if the version you need is available for your platform.
+
+Install the latest binary distribution by running:
 
 ```
 vruby install
@@ -43,7 +47,16 @@ This command will look to a `.ruby-version` file if one exists in the current wo
 vruby install $VERSION
 ```
 
-By default this will install Ruby versions to `/opt/vruby/share/$VERSION`. Note: vruby uses only relocatable, binary distributions of Ruby (currently from Traveling Ruby). This means you will __never__ have to wait for a Ruby to compile again.
+By default this will install Ruby versions to `/opt/vruby/share/$VERSION`.
+
+### Compiling a ruby with ruby-build
+
+If you don't mind compiling your Ruby, you can use `ruby-build` (installed on OS X via Homebrew) to download and compile any Ruby version into the location necessary for vruby:
+
+```
+mkdir -p /opt/vruby/share
+ruby-build 2.3.0 --prefix /opt/vruby/share/2.3.0
+```
 
 ## Usage
 
