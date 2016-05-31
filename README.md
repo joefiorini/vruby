@@ -23,10 +23,10 @@ Likewise, if you are interested in collaborating on this, please get in touch wi
 
 ### Homebrew
 
-vruby does not yet have an acceptable homebrew formula. There is a very simple Homebrew formula in this repo you can use to install for the time being. To install the latest HEAD via Homebrew simply install:
+vruby does not yet have an acceptable homebrew formula. To install the latest HEAD via Homebrew use [this gist](https://gist.githubusercontent.com/joefiorini/333f9b0d6b66dd93d622/raw/vruby.rb):
 
 ```
-brew install https://raw.githubusercontent.com/joefiorini/vruby/master/formula/vruby.rb
+brew install --HEAD https://gist.githubusercontent.com/joefiorini/333f9b0d6b66dd93d622/raw/vruby.rb
 ```
 
 ## Install Ruby
